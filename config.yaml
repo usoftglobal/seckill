@@ -1,0 +1,6 @@
+mysql:
+    host: 117.51.141.39
+    user: root
+    password: root
+redis:
+    host: 117.51.159.147
