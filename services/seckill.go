@@ -1,6 +1,7 @@
 package services
 
 import (
+	"log"
 	"errors"
 	"strconv"
 	"github.com/usoftglobal/seckill/models"
@@ -44,11 +45,16 @@ func (s *SeckillService) Buy(goodsID string, number string) (string, error) {
 	}
 
 	// 2、检查商品库存是否足够这个人购买的
-	if number <= detail["stock"] {
+	if number > detail["stock"] {
 		
 		// 扣除相对应的库存
-		models.RDB.HIncrBy("goods:" + goodsID, "stock", -int64Number)
-		
+		result, err := models.RDB.HIncrBy("goods:" + goodsID, "stock", -int64Number).Result()
+		if err != nil {
+			return failStr, err
+		}
+
+		log.Println("日志：", number, detail["stock"], result)
+
 		// Push 到队列里
 		d := map[string]interface{}{"goods_id": goodsID, "number": int64Number}
 		models.RDB.LPush("GoodsMQ", libs.MapToJSON(d))

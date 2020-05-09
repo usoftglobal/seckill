@@ -17,7 +17,7 @@ func init() {
 	conf := libs.Conf()
 	
 	// MySQL 连接池
-	DB, err = gorm.Open("mysql", conf.MySQL.User + ":" + conf.MySQL.Password + "@" + conf.MySQL.Host + "/seckill?charset=utf8&parseTime=True&loc=Local")
+	DB, err = gorm.Open("mysql", conf.MySQL.User + ":" + conf.MySQL.Password + "@(" + conf.MySQL.Host + ")/seckill?charset=utf8&parseTime=True&loc=Local")
 
 	// if err != nil {
 	// 	假如数据库连接异常应该报警，这里不要 panic 报错因为有些业务只通过缓存访问不要影响
