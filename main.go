@@ -8,23 +8,18 @@ import (
 
 // 应用入口
 func main() {
-	SS := new(services.SeckillService)
 
-	go SS.OrderHandel()
+	// 订单处理队列
+	go (&services.SeckillService{}).OrderHandel()
 
-	runGin()
+	// GIN Framework
+	ginFramework()
 }
 
-func runGin() {
-
+func ginFramework() {
 	gin.SetMode(gin.ReleaseMode)
 	ginEngine := gin.Default()
 	ginEngine = setupRouter(ginEngine)
 	ginEngine.Run(":3000")
-	
-	defer Close()
-}
-
-func Close() {
-	models.DB.Close()
+	defer models.DB.Close()
 }
