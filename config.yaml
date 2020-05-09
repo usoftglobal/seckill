@@ -1,6 +1,6 @@
 mysql:
-    host: 117.51.141.39
+    host: 10.255.20.229
     user: root
     password: root
 redis:
-    host: 117.51.159.147
+    host: 10.255.20.53

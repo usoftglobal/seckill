@@ -13,7 +13,7 @@ func setupRouter(r *gin.Engine) *gin.Engine {
 	seckill := new(controllers.SeckillController)
 
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
+		c.String(http.StatusOK, "Hello Golang!")
 	})
 	
 	// 商品
