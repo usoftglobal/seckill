@@ -24,7 +24,7 @@ func (g *GoodsController) All(c *gin.Context) {
 }
 
 func (g *GoodsController) Detail(c *gin.Context) {
-	res, err := g.GoodsService.FindFromCache(c.Param("id"))
+	res, err := g.GoodsService.Find(libs.StringToUint(c.Param("id")))
 	
 	if err != nil {
 		c.JSON(http.StatusOK, libs.Fail(err))
@@ -35,14 +35,14 @@ func (g *GoodsController) Detail(c *gin.Context) {
 }
 
 func (g *GoodsController) Create(c *gin.Context) {
-	res, err := g.GoodsService.Create()
+	err := g.GoodsService.Create(libs.StringToUint(c.Query("number")))
 	
 	if err != nil {
 		c.JSON(http.StatusOK, libs.Fail(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, libs.Success(res))
+	c.JSON(http.StatusOK, libs.Success(""))
 }
 
 func (g *GoodsController) Update(c *gin.Context) {

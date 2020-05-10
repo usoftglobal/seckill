@@ -17,7 +17,7 @@ func main() {
 }
 
 func ginFramework() {
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	ginEngine := gin.Default()
 	ginEngine = setupRouter(ginEngine)
 	ginEngine.Run(":3000")

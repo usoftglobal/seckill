@@ -9,7 +9,6 @@ import (
 func setupRouter(r *gin.Engine) *gin.Engine {
 
 	goods 	:= new(controllers.GoodsController)
-	order 	:= new(controllers.OrderController)
 	seckill := new(controllers.SeckillController)
 
 	r.GET("/", func(c *gin.Context) {
@@ -22,10 +21,6 @@ func setupRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/goodsCreate", goods.Create)
 	r.GET("/goodsUpdate/:id", goods.Update)
 	r.GET("/goodsDelete/:id", goods.Delete)
-
-	// 订单
-	r.GET("/order", order.All)
-	r.GET("/order/:id", order.Detail)
 
 	// 秒杀
 	r.GET("/seckill/buy", seckill.Buy)

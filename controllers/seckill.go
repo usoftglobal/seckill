@@ -13,7 +13,7 @@ type SeckillController struct {
 }
 
 func (s *SeckillController) Buy(c *gin.Context) {
-	res, err := s.SeckillService.Buy(c.Query("goods_id"), c.Query("number"))
+	res, err := s.SeckillService.Buy(libs.StringToUint(c.Query("goods_id")), libs.StringToUint(c.Query("number")))
 	
 	if err != nil {
 		c.JSON(http.StatusOK, libs.Fail(err))

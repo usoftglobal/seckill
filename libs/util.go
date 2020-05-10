@@ -20,8 +20,8 @@ func Conf() *Config {
 }
 
 // 类型判断
-func TypeOf(v interface{}) string {
-	return fmt.Sprintf("%T", v)
+func TypeOf(v interface{}) {
+	fmt.Println("格式：", fmt.Sprintf("%T", v), "值：", v)
 }
 
 // 日期时间格式化
@@ -30,15 +30,20 @@ func TimeFormat(t time.Time) string {
 }
 
 // 金额转换（元转分）
-func UnitToCents(unit string) int {
-	flt64,_ := strconv.ParseFloat(unit, 64)
-	return int(flt64 * 100)
+func UnitToCents(m uint) uint {
+	return m * 100
 }
 
 // 金额格式化（分转元）
 func PriceFormat(price int) string {
 	unit := float64(price) / 100
 	return fmt.Sprintf("￥%s", strconv.FormatFloat(unit, 'f', -1, 64))
+}
+
+// 字符串转整型
+func StringToUint(str string) uint {
+	num, _ := strconv.ParseUint(str, 10, 0);
+    return uint(num)
 }
 
 // 创建订单号
@@ -56,7 +61,7 @@ func CreateRandNo() int {
 	return r
 }
 
-// Struct 转 map
+// Struct 转 Map
 func StructToMap(s interface{}) (map[string]interface{}) {
 	j, _ := json.Marshal(s)
 	j = []byte(string(j))
@@ -71,20 +76,14 @@ func MapToJSON(m interface{}) string {
 	return string(j)
 }
 
-// JSON 转 Map
-func JSONToMap(j string) map[string]interface{} {
-	temp := []byte(j)
-    m := make(map[string]interface{})
-	json.Unmarshal(temp, &m)
-	return m
-}
-
 // JSON 返回成功
 func Success(results interface{}) gin.H {
-	return gin.H{"code": 0, "msg": "操作成功", "data": results}
+	data := gin.H{"code": 0, "msg": "操作成功", "data": results}
+	return data
 }
 
 // JSON 返回错误
 func Fail(err error) gin.H {
-	return gin.H{"code": 10000, "msg": fmt.Sprintf("%s", err), "data": ""}
+	data := gin.H{"code": 10000, "msg": fmt.Sprintf("%s", err), "data": ""}
+	return data
 }
