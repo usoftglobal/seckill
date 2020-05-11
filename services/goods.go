@@ -41,6 +41,22 @@ func (g *GoodsService) All() ([]models.Goods, error) {
 	return goods, nil
 }
 
+// 清空所有
+func (g *GoodsService) Clear() (string, error) {
+	// 清空所有数据
+	models.DB.Exec("truncate table `goods`;")
+	models.DB.Exec("truncate table `goods_skus`;")
+	models.DB.Exec("truncate table `orders`;")
+	models.RDB.FlushAll()
+
+	// 新增
+	for i := 1; i < 100; i++ {
+		g.Create(1000000)
+	}
+
+	return "success", nil
+}
+
 // 创建商品
 func (g *GoodsService) Create(number uint) error {
 	

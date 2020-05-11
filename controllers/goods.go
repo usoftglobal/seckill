@@ -66,3 +66,14 @@ func (g *GoodsController) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, libs.Success(res))
 }
+
+func (g *GoodsController) Clear(c *gin.Context) {
+	res, err := g.GoodsService.Clear()
+
+	if err != nil {
+		c.JSON(http.StatusOK, libs.Fail(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, libs.Success(res))
+}

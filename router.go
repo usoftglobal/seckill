@@ -14,6 +14,9 @@ func setupRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello Golang!")
 	})
+
+	// 清空
+	r.GET("/clear", goods.Clear)
 	
 	// 商品
 	r.GET("/goods", goods.All)
