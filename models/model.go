@@ -9,6 +9,7 @@ import (
 )
 
 var DB *gorm.DB
+var DBRrr error
 var RDB *redis.Client
 
 // 初始化
@@ -17,11 +18,11 @@ func init() {
 	
 	// MySQL 连接池
 	dsn := conf.MySQL.User + ":" + conf.MySQL.Password + "@(" + conf.MySQL.Host + ")/" + conf.MySQL.DB
-	DB, _ = gorm.Open("mysql", dsn + "?charset=utf8&parseTime=True&loc=Local")
+	DB, DBRrr = gorm.Open("mysql", dsn + "?charset=utf8&parseTime=True&loc=Local")
 
-	// if err != nil {
-	// 	假如数据库连接异常应该报警，这里不要 panic 报错因为有些业务只通过缓存访问不要影响
-	// }
+	if DBRrr != nil {
+		panic("数据库连接失败")
+	}
 
 	DB.BlockGlobalUpdate(true)
 
