@@ -79,10 +79,10 @@ func (s *SeckillService) decrStock(goodsID uint, number int64, cacheKey string) 
 
 	// 如果并发情况下执行事务失败，帮助用户重新发起
 	if err == redis.TxFailedErr {
-		return s.decrStock(goodsID,  number, cacheKey)
+		// return s.decrStock(goodsID,  number, cacheKey)
 
 		// 这时候可能还有库存，也可以让用户自己再次发起请求，可提示抢购人数太多请重试
-		// return errors.New("当前抢购人数太多，请重试")
+		return errors.New("当前抢购人数太多，请重试")
 	}
 
 	return err
