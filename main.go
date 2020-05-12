@@ -18,7 +18,8 @@ func main() {
 
 func ginFramework() {
 	gin.SetMode(gin.ReleaseMode)
-	ginEngine := gin.Default()
+	ginEngine := gin.New()
+	// ginEngine := gin.Default()  // 这种方式会加载中间件
 	pprof.Register(ginEngine, "debug/pprof")
 	ginEngine = setupRouter(ginEngine)
 	ginEngine.Run(":3000")

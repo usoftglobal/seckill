@@ -42,7 +42,7 @@ func (s *SeckillService) Buy(goodsID uint, numbera uint) (string, error) {
 
 	// 扣减库存
 	cacheKey := (&models.GoodsSKU{}).CacheKey(goodsID)
-	err := s.decrStock(goodsID, number, cacheKey)
+	err := s.decrStockByLua(number, cacheKey)
 	if err != nil {
 		return failStr, err
 	}
@@ -86,6 +86,42 @@ func (s *SeckillService) decrStock(goodsID uint, number int64, cacheKey string) 
 	}
 
 	return err
+}
+
+// 扣减库存 Lua 版
+func (s *SeckillService) decrStockByLua(number int64, cacheKey string) error {
+	
+	luaScript := `
+		local key    = tostring(KEYS[1])
+		local number = tonumber(ARGV[1])
+		
+		-- 库存判断
+		local stock  = redis.call("GET", key)
+		stock		 = tonumber(stock)
+		
+		if(number > stock) then
+			return 0
+		end
+		
+		-- 库存扣减
+		redis.call("DECRBY", key, number)
+
+		return 1
+	`
+
+	// 将脚本生成一个 sha1 哈希值，减少网络传输
+	luaScriptSha, err := models.RDB.ScriptLoad(luaScript).Result()
+	if err != nil {
+		return err
+	}
+
+	status := models.RDB.EvalSha(luaScriptSha, []string{cacheKey}, number)
+
+	if status.Val() == "0" {
+		return errors.New("库存不足了兄弟")
+	}
+	
+	return nil
 }
 
 // 异步处理订单
