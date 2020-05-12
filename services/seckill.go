@@ -91,6 +91,8 @@ func (s *SeckillService) decrStock(goodsID uint, number int64, cacheKey string) 
 // 扣减库存 Lua 版
 func (s *SeckillService) decrStockByLua(number int64, cacheKey string) error {
 	
+	var nilStatus int64 = 0
+
 	luaScript := `
 		local key    = tostring(KEYS[1])
 		local number = tonumber(ARGV[1])
@@ -115,10 +117,11 @@ func (s *SeckillService) decrStockByLua(number int64, cacheKey string) error {
 		return err
 	}
 
+	// 执行脚本
 	status := models.RDB.EvalSha(luaScriptSha, []string{cacheKey}, number)
 
-	if status.Val() == "0" {
-		return errors.New("库存不足了兄弟")
+	if status.Val() == nilStatus {
+		return errors.New("库存不足")
 	}
 	
 	return nil
