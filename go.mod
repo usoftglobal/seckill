@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/fatih/color v1.9.0 // indirect
-	github.com/gin-contrib/pprof v1.3.0 // indirect
+	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-redis/redis/v7 v7.2.0
 	github.com/jessevdk/go-flags v1.4.0 // indirect

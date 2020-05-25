@@ -1,9 +1,9 @@
 mysql:
-    host: 10.255.20.229
-    #host: 117.51.141.39
+    host: 0.0.0.0
+    port: 3307
     user: root
     password: root
     db: seckill
 redis:
-    host: 10.255.20.53
-    #host: 117.51.159.147
+    host: 0.0.0.0
+    port: 6399
