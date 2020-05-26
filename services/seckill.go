@@ -30,7 +30,8 @@ func (s *SeckillService) Buy(goodsID uint, unitNumber uint) (string, error) {
 
 	// 扣减库存
 	cacheKey := (&models.GoodsSKU{}).CacheKey(goodsID)
-	err = s.decrStockBy(number, cacheKey)
+	err = s.decrStock(number, cacheKey)
+
 	if err != nil {
 		return failStr, err
 	}
@@ -56,22 +57,22 @@ func (s *SeckillService) buyCheck(goodsID uint, number int64) error {
 }
 
 // 扣减库存
-func (s *SeckillService) decrStockBy(number int64, cacheKey string) error {
+func (s *SeckillService) decrStock(number int64, cacheKey string) error {
 
 	var nilStatus int64 = 0
 
 	luaScript := `
 		local key    = tostring(KEYS[1])
 		local number = tonumber(ARGV[1])
-		
+
 		-- 库存判断
 		local stock  = redis.call("GET", key)
 		stock		 = tonumber(stock)
-		
+
 		if(number > stock) then
 			return 0
 		end
-		
+
 		-- 库存扣减
 		redis.call("DECRBY", key, number)
 

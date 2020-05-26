@@ -28,7 +28,7 @@ func (o *OrderService) CreateOrderHandel(goodsID uint, number uint) error {
 		}
 
 		// 扣减库存
-		if err := tx.Model(&sku).UpdateColumn("stock", sku.Stock-number).Error; err != nil {
+		if err := tx.Model(&sku).UpdateColumn("stock", gorm.Expr("stock - ?", number)).Error; err != nil {
 			return err
 		}
 

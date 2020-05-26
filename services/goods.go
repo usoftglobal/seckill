@@ -52,7 +52,7 @@ func (g *GoodsService) Clear() (string, error) {
 
 	// 新增
 	for i := 1; i < 100; i++ {
-		g.Create(1000000)
+		g.Create(10000)
 	}
 
 	return "success", nil
