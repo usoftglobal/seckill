@@ -2,16 +2,17 @@ package services
 
 import (
 	"errors"
-	"github.com/usoftglobal/seckill/models"
+
 	"github.com/usoftglobal/seckill/libs"
+	"github.com/usoftglobal/seckill/models"
 )
 
 // 商品服务
-type GoodsService struct {}
+type GoodsService struct{}
 
-// 查询商品详情
+// 查询商品详情（从缓存）
 func (g *GoodsService) Find(id uint) (map[string]string, error) {
-	nilMap := map[string]string {}
+	nilMap := map[string]string{}
 
 	cacheKey := (&models.Goods{}).CacheKey(id)
 	cacheResult, err := models.RDB.HGetAll(cacheKey).Result()
@@ -29,7 +30,7 @@ func (g *GoodsService) Find(id uint) (map[string]string, error) {
 // 获取所有商品
 func (g *GoodsService) All() ([]models.Goods, error) {
 	var goods []models.Goods
-	
+
 	if result := models.DB.Find(&goods); result.Error != nil {
 		return goods, result.Error
 	}
@@ -59,7 +60,7 @@ func (g *GoodsService) Clear() (string, error) {
 
 // 创建商品
 func (g *GoodsService) Create(number uint) error {
-	
+
 	// 开启事务
 	tx := models.DB.Begin()
 	defer func() {
@@ -72,7 +73,7 @@ func (g *GoodsService) Create(number uint) error {
 	if err := tx.Error; err != nil {
 		return err
 	}
-	
+
 	// Goods
 	goods := models.Goods{}
 	goods.Name = "BMW 3系"
@@ -85,10 +86,10 @@ func (g *GoodsService) Create(number uint) error {
 	// SKU
 	sku := models.GoodsSKU{}
 	sku.GoodsID = goods.ID
-	sku.Name    = "320Li"
-	sku.Stock   = number
-	sku.Price   = libs.UnitToCents(280000)
-	
+	sku.Name = "320Li"
+	sku.Stock = number
+	sku.Price = libs.UnitToCents(280000)
+
 	if err := tx.Save(&sku).Error; err != nil {
 		tx.Rollback()
 		return err
@@ -111,58 +112,4 @@ func (g *GoodsService) Create(number uint) error {
 	}
 
 	return tx.Commit().Error
-}
-
-// ---------------------------------- 下面的不重要 ---------------------------------- //
-
-// 查询商品详情从数据库
-func (g *GoodsService) FindFromDB(id uint) (models.Goods, error) {
-
-	goods := models.Goods{}
-
-	if id == 0 {
-		return goods, errors.New("商品ID不能为空")
-	}
-
-	if result := models.DB.First(&goods, id); result.Error != nil {
-		return goods, result.Error
-	}
-
-	if goods.ID == 0 {
-		return goods, errors.New("商品不存在或已删除")
-	}
-
-	return goods, nil
-}
-
-// 修改商品
-func (g *GoodsService) Update(id string) (bool, error) {
-	// current, err := g.Find(id)
-	
-	// if err != nil {
-	// 	return false, err
-	// }
-
-	// data := map[string]interface{}{"name": "NewName"}
-
-	// if result := models.DB.Model(&current).Updates(data); result.Error != nil {
-	// 	return false, result.Error
-	// }
-
-	return true, nil
-}
-
-// 删除商品
-func (g *GoodsService) Delete(id string) (bool, error) {
-	// current, err := g.Find(id)
-	
-	// if err != nil {
-	// 	return false, err
-	// }
- 
-	// if result := models.DB.Delete(&current); result.Error != nil {
-	// 	return false, result.Error
-	// }
-
-	return true, nil
 }
